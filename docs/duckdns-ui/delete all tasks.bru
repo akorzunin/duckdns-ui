@@ -1,0 +1,17 @@
+meta {
+  name: delete all tasks
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{LOCAL}}/api/all-tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "interval": "10s"
+  }
+}

@@ -1,0 +1,18 @@
+meta {
+  name: new task
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{LOCAL}}/api/task
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "domain": "test.domain",
+    "interval": "1s"
+  }
+}

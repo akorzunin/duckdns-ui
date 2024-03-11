@@ -1,0 +1,17 @@
+meta {
+  name: get all tasks
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{LOCAL}}/api/all-tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "interval": "10s"
+  }
+}

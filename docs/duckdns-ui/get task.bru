@@ -1,0 +1,17 @@
+meta {
+  name: get task
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{LOCAL}}/api/task/test.domain
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "interval": "10s"
+  }
+}

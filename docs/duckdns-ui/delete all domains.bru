@@ -1,0 +1,18 @@
+meta {
+  name: delete all domains
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{LOCAL}}/api/all-domains
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "test.domain",
+    "ip": "0.0.0.0"
+  }
+}

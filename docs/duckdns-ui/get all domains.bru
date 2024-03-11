@@ -1,0 +1,18 @@
+meta {
+  name: get all domains
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{LOCAL}}/api/all-domains
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "test.domain",
+    "ip": "0.0.0.0"
+  }
+}
