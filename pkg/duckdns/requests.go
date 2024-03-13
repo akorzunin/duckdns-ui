@@ -7,6 +7,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"time"
 )
 
 func UpdateDnsEntry(token string, ip string, domain string) error {
@@ -63,4 +64,17 @@ func GetGlobalIP() (string, error) {
 		return "", err
 	}
 	return string(body), nil
+}
+
+func UpdateDomain(domain string, interval time.Duration) {
+	ip, err := GetGlobalIP()
+	if err != nil {
+		slog.Error(err.Error(), "domain", domain, "interval", interval)
+		return
+	}
+	err = UpdateDnsEntry(configs.TOKEN, ip, domain)
+	if err != nil {
+		slog.Error(err.Error(), "domain", domain, "interval", interval)
+		return
+	}
 }

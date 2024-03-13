@@ -6,7 +6,6 @@ import (
 	"duckdns-ui/pkg/tasks"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"slices"
 	"time"
@@ -60,22 +59,22 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			w.Write([]byte("incorrect domain"))
 			return
 		}
+		if interval == 0 {
+			tasks.S.RemoveByTags(input.Domain)
+			duckdns.UpdateDomain(input.Domain, interval)
+			w.Write([]byte("ok"))
+			return
+		}
+		if interval.Minutes() < 1 && !configs.DRY_RUN {
+			w.WriteHeader(400)
+			w.Write([]byte("interval too short"))
+			return
+		}
 		tasks.S.RemoveByTags(input.Domain)
 		tasks.S.NewJob(
 			gocron.DurationJob(interval),
 			gocron.NewTask(
-				func() {
-					ip, err := duckdns.GetGlobalIP()
-					if err != nil {
-						slog.Error(err.Error(), "domain", input.Domain, "interval", interval)
-						return
-					}
-					err = duckdns.UpdateDnsEntry(configs.TOKEN, ip, input.Domain)
-					if err != nil {
-						slog.Error(err.Error(), "domain", input.Domain, "interval", interval)
-						return
-					}
-				},
+				duckdns.UpdateDomain, input.Domain, interval,
 			),
 			gocron.WithTags(input.Domain),
 			gocron.WithName(input.Interval),
