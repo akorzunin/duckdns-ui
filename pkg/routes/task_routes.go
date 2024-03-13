@@ -1,10 +1,12 @@
 package routes
 
 import (
+	"duckdns-ui/configs"
 	"duckdns-ui/pkg/duckdns"
 	"duckdns-ui/pkg/tasks"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"slices"
 	"time"
@@ -63,15 +65,21 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			gocron.DurationJob(interval),
 			gocron.NewTask(
 				func() {
-					a, _ := duckdns.GetGlobalIP()
-					println(a, interval.String(), input.Domain)
-					// TODO: ...
+					ip, err := duckdns.GetGlobalIP()
+					if err != nil {
+						slog.Error(err.Error(), "domain", input.Domain, "interval", interval)
+						return
+					}
+					err = duckdns.UpdateDnsEntry(configs.TOKEN, ip, input.Domain)
+					if err != nil {
+						slog.Error(err.Error(), "domain", input.Domain, "interval", interval)
+						return
+					}
 				},
 			),
 			gocron.WithTags(input.Domain),
 			gocron.WithName(input.Interval),
 		)
-		fmt.Printf("%v\n", input)
 		w.Write([]byte("ok"))
 	})
 
