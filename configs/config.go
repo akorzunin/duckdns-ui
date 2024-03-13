@@ -9,7 +9,7 @@ import (
 
 var _ int = func() int {
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file")
+		return 1
 	}
 	return 1
 }()
