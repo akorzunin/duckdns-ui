@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+  - repo: https://github.com/segmentio/golines
+    rev: v0.12.2
+    hooks:
+      - id: golines
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - "prettier@^3.0.3"
+          - "prettier-plugin-tailwindcss@^0.5.5"
+        types_or: [javascript, ts, tsx]
