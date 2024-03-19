@@ -1,21 +1,21 @@
+import { FC } from "react";
+import { Domain } from "../api/client";
 import { ScrollArea } from "../shadcn/ui/scroll-area";
 import DomainCard from "./DomainCard";
 
-const tags = Array.from({ length: 50 }).map((_, i, a) => {
-  return {
-    name: `test.${a.length - i}.domain`,
-    ip: `127.0.0.${a.length - i}`,
-  };
-});
-
-const DomainList = () => {
+interface IDomainList {
+  domains: Domain[] | undefined;
+}
+const DomainList: FC<IDomainList> = ({ domains }) => {
   return (
     <ScrollArea className="h-[70vh] rounded-md border">
-      <div className="p-4">
-        {tags.map((tag) => (
-          <DomainCard tag={tag} />
-        ))}
-      </div>
+      {domains && (
+        <div className="flex flex-col gap-4 p-4">
+          {domains.map((domain) => (
+            <DomainCard name={domain.name} ip={domain.ip} key={domain.name} />
+          ))}
+        </div>
+      )}
     </ScrollArea>
   );
 };
