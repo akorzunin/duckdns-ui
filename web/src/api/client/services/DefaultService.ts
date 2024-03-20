@@ -1,4 +1,4 @@
-/* generated using openapi-typescript-codegen -- do no edit */
+/* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
@@ -50,6 +50,27 @@ export class DefaultService {
     ): CancelablePromise<Domain> {
         return __request(OpenAPI, {
             method: 'GET',
+            url: '/api/domain/{domain}',
+            path: {
+                'domain': domain,
+            },
+            errors: {
+                400: `Bad Request`,
+                404: `Not Found`,
+            },
+        });
+    }
+    /**
+     * Delete a specific domain
+     * @param domain
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static deleteApiDomain(
+        domain: string,
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
             url: '/api/domain/{domain}',
             path: {
                 'domain': domain,
