@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import { Button } from "../../shadcn/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -19,8 +20,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../shadcn/ui/select";
+import { FC, useState } from "react";
+import { DefaultService } from "../../api/client";
 
-const AddTaskButton = () => {
+interface IAddTaskButton {
+  domainName: string;
+  refetch: () => void;
+}
+const AddTaskButton: FC<IAddTaskButton> = ({ domainName, refetch }) => {
+  const [interval, setInterval] = useState<string | null>(null);
+  const onSubmit = async () => {
+    if (!interval) {
+      return;
+    }
+    const res = await DefaultService.postApiTask({
+      domain: domainName,
+      interval: interval,
+    });
+    if (res === "ok") {
+      refetch();
+    }
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,7 +53,9 @@ const AddTaskButton = () => {
         <DialogHeader>
           <DialogTitle>Create task</DialogTitle>
           <DialogDescription>
-            Run periodiacal task to update ip of this domain.
+            Run periodiacal task to update ip of this domain. Task will
+            automatically get ip from <b>ifconfig.me</b> and send it to duckdns
+            server.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -42,15 +64,19 @@ const AddTaskButton = () => {
             <CardTitle>test.domain</CardTitle>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="interval" className="text-right">
-              Interval
-            </Label>
-            <Select>
+            <Select
+              name="interval"
+              onValueChange={(v) => setInterval(v)}
+              // defaultValue="1m"
+            >
+              <Label className="text-right">Interval</Label>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select interval" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
+                  <SelectItem value="1s">1 second (dev)</SelectItem>
+                  <SelectItem value="5s">5 seconds (dev)</SelectItem>
                   <SelectItem value="1m">1 minute</SelectItem>
                   <SelectItem value="5m">5 minutes</SelectItem>
                   <SelectItem value="10m">10 minutes</SelectItem>
@@ -65,7 +91,11 @@ const AddTaskButton = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <DialogClose>
+            <Button onClick={onSubmit} type="submit">
+              Save changes
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

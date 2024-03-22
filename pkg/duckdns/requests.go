@@ -2,10 +2,12 @@ package duckdns
 
 import (
 	"duckdns-ui/configs"
+	"duckdns-ui/pkg/db"
 	"errors"
 	"fmt"
 	"io"
 	"log/slog"
+	"math/rand/v2"
 	"net/http"
 	"time"
 )
@@ -45,7 +47,8 @@ func UpdateDnsEntry(token string, ip string, domain string) error {
 func GetGlobalIP() (string, error) {
 	url := "http://ifconfig.me/"
 	if configs.DRY_RUN {
-		return "127.0.0.1", nil
+		dummyIp := fmt.Sprintf("127.0.0.%d", rand.IntN(256-0)+0)
+		return dummyIp, nil
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -73,6 +76,11 @@ func UpdateDomain(domain string, interval time.Duration) {
 		return
 	}
 	err = UpdateDnsEntry(configs.TOKEN, ip, domain)
+	if err != nil {
+		slog.Error(err.Error(), "domain", domain, "interval", interval)
+		return
+	}
+	err = db.UpdateDomainEntry(db.DB, domain, ip)
 	if err != nil {
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return

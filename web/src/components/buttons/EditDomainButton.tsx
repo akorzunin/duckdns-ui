@@ -11,40 +11,63 @@ import {
 } from "../../shadcn/ui/dialog";
 import { Input } from "../../shadcn/ui/input";
 import { Label } from "../../shadcn/ui/label";
-
-const EditDomainButton = () => {
+import { FC } from "react";
+import { DefaultService, Domain } from "../../api/client";
+import { CardTitle } from "../../shadcn/ui/card";
+interface IEditDomainButton {
+  domain: Domain;
+}
+const EditDomainButton: FC<IEditDomainButton> = ({ domain }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="flex gap-2">
-          <Pencil strokeWidth={0.8} className="p-0.5" />
+          <Pencil strokeWidth={1.5} className="p-0.5" />
           Edit
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit domain data</DialogTitle>
-          <DialogDescription>
-            Make changes to domain entry here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="domain" className="text-right">
-              Domain
-            </Label>
-            <Input id="domain" value="test.domain" className="col-span-3" />
+        <form
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSubmit={async (e: any) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const newIP = e.target.ip.value;
+            const res = await DefaultService.postApiDomain({
+              name: domain.name,
+              ip: newIP,
+            });
+            if (res === "ok") {
+              window.location.reload();
+            }
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle>Edit domain data</DialogTitle>
+            <DialogDescription>
+              Make changes to domain entry here. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Domain</Label>
+              <CardTitle>{domain.name}</CardTitle>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="ip" className="text-right">
+                ip
+              </Label>
+              <Input
+                id="ip"
+                defaultValue={domain.ip || "255.255.255.255"}
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="ip" className="text-right">
-              ip
-            </Label>
-            <Input id="ip" value="127.0.0.1" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -4,15 +4,23 @@ import DomainList from "../components/DomainList";
 import MainFooter from "../components/MainFooter";
 import MainHeader from "../components/MainHeader";
 import AddDomainButton from "../components/buttons/AddDomainButton";
+import { atom, useSetAtom } from "jotai";
+
+export interface IrefetchAllDomainsAtom {
+  fn: () => void;
+}
+export const refetchAllDomainsAtom = atom<IrefetchAllDomainsAtom>({
+  fn: async () => {},
+});
 
 const MainPage = () => {
-  const {
-    data: domains,
-    refetch: refetchDomains,
-  } = useQuery({
+  const { data: domains, refetch: refetchAllDomains } = useQuery({
     queryKey: ["domains"],
     queryFn: () => DefaultService.getApiAllDomains(),
+    refetchInterval: 5000,
   });
+  const setRefetchAllDomins = useSetAtom(refetchAllDomainsAtom);
+  setRefetchAllDomins({ fn: refetchAllDomains });
 
   return (
     <>
@@ -21,7 +29,7 @@ const MainPage = () => {
         <div className="flex justify-end px-4 py-4">
           <AddDomainButton />
         </div>
-        <DomainList domains={domains}/>
+        <DomainList domains={domains} />
       </div>
       <MainFooter />
     </>

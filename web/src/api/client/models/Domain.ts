@@ -6,4 +6,3 @@ export type Domain = {
     name: string;
     ip?: string;
 };
-

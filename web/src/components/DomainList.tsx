@@ -12,7 +12,7 @@ const DomainList: FC<IDomainList> = ({ domains }) => {
       {domains && (
         <div className="flex flex-col gap-4 p-4">
           {domains.map((domain) => (
-            <DomainCard name={domain.name} ip={domain.ip} key={domain.name} />
+            <DomainCard domain={domain} key={domain.name} />
           ))}
         </div>
       )}

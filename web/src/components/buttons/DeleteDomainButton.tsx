@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,19 +12,24 @@ import {
 } from "../../shadcn/ui/alert-dialog";
 import { Button } from "../../shadcn/ui/button";
 import { Trash2 } from "lucide-react";
-
-const DeleteDomainButton = () => {
+import { DefaultService } from "../../api/client";
+interface IDeleteDomainButton {
+  domainName: string;
+}
+const DeleteDomainButton: FC<IDeleteDomainButton> = ({
+  domainName: domain,
+}) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="default" className="flex gap-2">
+        <Button variant="outline" className="flex gap-2">
           <Trash2 className="p-0.5" />
           Delete
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete data about this domain?</AlertDialogTitle>
+          <AlertDialogTitle>Delete domain {domain}?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete domain
             entry from db and corresponding task if if exist.
@@ -31,7 +37,17 @@ const DeleteDomainButton = () => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction
+            onClick={async (e) => {
+              e.preventDefault();
+              const res = await DefaultService.deleteApiDomain(domain);
+              if (res === "ok") {
+                window.location.reload();
+              }
+            }}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

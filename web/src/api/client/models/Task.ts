@@ -6,4 +6,3 @@ export type Task = {
     domain: string;
     interval: string;
 };
-

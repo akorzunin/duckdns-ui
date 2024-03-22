@@ -28,3 +28,15 @@ func (d *Domain) Save(db *bolt.DB) error {
 	})
 	return err
 }
+
+func UpdateDomainEntry(db *bolt.DB, name string, ip string) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(DomainsBucket))
+		encoded, err := json.Marshal(Domain{Name: name, IP: ip})
+		if err != nil {
+			return err
+		}
+		return b.Put([]byte(name), encoded)
+	})
+	return err
+}

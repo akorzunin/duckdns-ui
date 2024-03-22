@@ -60,7 +60,6 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			return
 		}
 		if interval == 0 {
-			tasks.S.RemoveByTags(input.Domain)
 			duckdns.UpdateDomain(input.Domain, interval)
 			w.Write([]byte("ok"))
 			return
