@@ -22,8 +22,6 @@ go.work
 
 tmp
 *.db
-package-lock.json
-go.sum
 .vscode
 __debug*
 .env

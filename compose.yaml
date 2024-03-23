@@ -1,0 +1,12 @@
+services:
+  duckdns-ui:
+    build:
+      context: .
+      target: final
+    env_file:
+      - .env
+    ports:
+      - ${PORT:-3000}:3000
+    volumes:
+      - ./data:/src/data:rw
+    restart: unless-stopped
