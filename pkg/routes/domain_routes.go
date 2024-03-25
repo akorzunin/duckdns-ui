@@ -2,6 +2,7 @@ package routes
 
 import (
 	"duckdns-ui/pkg/db"
+	"duckdns-ui/pkg/tasks"
 	"encoding/json"
 	"net/http"
 
@@ -91,7 +92,9 @@ func AddDomainRoutes(mux *http.ServeMux) *http.ServeMux {
 		if err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte("delete from db failed"))
+			return
 		}
+		tasks.S.RemoveByTags(domain)
 		w.Write([]byte("ok"))
 	})
 
