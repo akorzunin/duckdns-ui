@@ -12,8 +12,12 @@ import {
 import { Label } from "@radix-ui/react-label";
 import { Input } from "../../shadcn/ui/input";
 import { DefaultService } from "../../api/client";
+import { refetchAllDomainsAtom } from "../../pages/MainPage";
+import { useAtomValue } from "jotai";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 const AddDomainButton = () => {
+  const refetchAllDomains = useAtomValue(refetchAllDomainsAtom);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,7 +37,7 @@ const AddDomainButton = () => {
               name: domain,
             });
             if (res === "ok") {
-              window.location.reload();
+              refetchAllDomains.fn();
             }
           }}
         >
@@ -53,7 +57,9 @@ const AddDomainButton = () => {
             />
           </div>
           <DialogFooter>
-            <Button type="submit">Add</Button>
+            <DialogPrimitive.Close>
+              <Button type="submit">Add</Button>
+            </DialogPrimitive.Close>
           </DialogFooter>
         </form>
       </DialogContent>

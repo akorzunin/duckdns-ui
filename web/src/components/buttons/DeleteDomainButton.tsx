@@ -13,12 +13,15 @@ import {
 import { Button } from "../../shadcn/ui/button";
 import { Trash2 } from "lucide-react";
 import { DefaultService } from "../../api/client";
+import { refetchAllDomainsAtom } from "../../pages/MainPage";
+import { useAtomValue } from "jotai";
 interface IDeleteDomainButton {
   domainName: string;
 }
 const DeleteDomainButton: FC<IDeleteDomainButton> = ({
   domainName: domain,
 }) => {
+  const refetchAllDomains = useAtomValue(refetchAllDomainsAtom);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -38,11 +41,10 @@ const DeleteDomainButton: FC<IDeleteDomainButton> = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={async (e) => {
-              e.preventDefault();
+            onClick={async () => {
               const res = await DefaultService.deleteApiDomain(domain);
               if (res === "ok") {
-                window.location.reload();
+                refetchAllDomains.fn();
               }
             }}
           >

@@ -1,14 +1,10 @@
 import { FC } from "react";
 import { DefaultService, Task } from "../api/client";
 import { Button } from "../shadcn/ui/button";
-import {
-  CircleX,
-  FileText,
-  IterationCw,
-} from "lucide-react";
+import { CircleX, FileText, IterationCw } from "lucide-react";
 import { Separator } from "../shadcn/ui/separator";
 
-const taskIConSize = 18
+const taskIConSize = 18;
 
 interface ITaskCard {
   task: Task;

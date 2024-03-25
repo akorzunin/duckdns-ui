@@ -14,10 +14,15 @@ import { Label } from "../../shadcn/ui/label";
 import { FC } from "react";
 import { DefaultService, Domain } from "../../api/client";
 import { CardTitle } from "../../shadcn/ui/card";
+import { refetchAllDomainsAtom } from "../../pages/MainPage";
+import { useAtomValue } from "jotai";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+
 interface IEditDomainButton {
   domain: Domain;
 }
 const EditDomainButton: FC<IEditDomainButton> = ({ domain }) => {
+  const refetchAllDomains = useAtomValue(refetchAllDomainsAtom);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -38,7 +43,7 @@ const EditDomainButton: FC<IEditDomainButton> = ({ domain }) => {
               ip: newIP,
             });
             if (res === "ok") {
-              window.location.reload();
+              refetchAllDomains.fn();
             }
           }}
         >
@@ -65,7 +70,9 @@ const EditDomainButton: FC<IEditDomainButton> = ({ domain }) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <DialogPrimitive.Close>
+              <Button type="submit">Save changes</Button>
+            </DialogPrimitive.Close>
           </DialogFooter>
         </form>
       </DialogContent>
