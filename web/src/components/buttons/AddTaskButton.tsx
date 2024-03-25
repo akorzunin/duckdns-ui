@@ -22,6 +22,9 @@ import {
 } from "../../shadcn/ui/select";
 import { FC, useState } from "react";
 import { DefaultService } from "../../api/client";
+import { useAtomValue } from "jotai";
+import { isDevModeAtom } from "../DevModeBadge";
+import { cn } from "../../lib/utils";
 
 interface IAddTaskButton {
   domainName: string;
@@ -29,6 +32,7 @@ interface IAddTaskButton {
 }
 const AddTaskButton: FC<IAddTaskButton> = ({ domainName, refetch }) => {
   const [interval, setInterval] = useState<string | null>(null);
+  const isDevMode = useAtomValue(isDevModeAtom);
   const onSubmit = async () => {
     if (!interval) {
       return;
@@ -75,8 +79,12 @@ const AddTaskButton: FC<IAddTaskButton> = ({ domainName, refetch }) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="1s">1 second (dev)</SelectItem>
-                  <SelectItem value="5s">5 seconds (dev)</SelectItem>
+                  <SelectItem className={cn(!isDevMode && "hidden")} value="1s">
+                    1 second (dev)
+                  </SelectItem>
+                  <SelectItem className={cn(!isDevMode && "hidden")} value="5s">
+                    5 seconds (dev)
+                  </SelectItem>
                   <SelectItem value="1m">1 minute</SelectItem>
                   <SelectItem value="5m">5 minutes</SelectItem>
                   <SelectItem value="10m">10 minutes</SelectItem>

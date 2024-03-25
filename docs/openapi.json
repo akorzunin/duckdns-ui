@@ -15,6 +15,16 @@
         }
       }
     },
+    "/devmode": {
+      "get": {
+        "summary": "Get devMode",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/domain": {
       "post": {
         "summary": "Add a new domain",

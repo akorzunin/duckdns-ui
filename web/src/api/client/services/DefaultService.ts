@@ -20,6 +20,17 @@ export class DefaultService {
         });
     }
     /**
+     * Get devMode
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getDevmode(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/devmode',
+        });
+    }
+    /**
      * Add a new domain
      * @param requestBody
      * @returns any OK

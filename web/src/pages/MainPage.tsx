@@ -5,6 +5,7 @@ import MainFooter from "../components/MainFooter";
 import MainHeader from "../components/MainHeader";
 import AddDomainButton from "../components/buttons/AddDomainButton";
 import { atom, useSetAtom } from "jotai";
+import DevModeBadge from "../components/DevModeBadge";
 
 export interface IrefetchAllDomainsAtom {
   fn: () => void;
@@ -26,8 +27,13 @@ const MainPage = () => {
     <>
       <div className="container mx-auto px-10 py-6">
         <MainHeader />
-        <div className="flex justify-end px-4 py-4">
-          <AddDomainButton />
+        <div className="flex items-center justify-between">
+          <div className="p-4">
+            <DevModeBadge />
+          </div>
+          <div className="flex justify-end px-2 py-4">
+            <AddDomainButton />
+          </div>
         </div>
         <DomainList domains={domains} />
       </div>
