@@ -2,6 +2,8 @@ package routes
 
 import (
 	"duckdns-ui/configs"
+	"duckdns-ui/pkg/buckets"
+	"duckdns-ui/pkg/db"
 	"duckdns-ui/pkg/duckdns"
 	"duckdns-ui/pkg/tasks"
 	"encoding/json"
@@ -78,12 +80,19 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			gocron.WithTags(input.Domain),
 			gocron.WithName(input.Interval),
 		)
+		t := buckets.DbTask{
+			Domain:    input.Domain,
+			Interval:  input.Interval,
+			CreatedAt: time.Now().String(),
+		}
+		t.Save(db.DB)
 		w.Write([]byte("ok"))
 	})
 
 	mux.HandleFunc("DELETE /api/task/{domain}", func(w http.ResponseWriter, r *http.Request) {
 		domain := r.PathValue("domain")
 		tasks.S.RemoveByTags(domain)
+		buckets.DeleteTask(db.DB, domain)
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
 	})
@@ -117,6 +126,7 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			return
 		}
 		tasks.S.Start()
+		buckets.DeleteAllTasks(db.DB)
 		w.WriteHeader(200)
 		w.Write([]byte("ok"))
 	})

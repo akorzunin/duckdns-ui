@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"duckdns-ui/pkg/buckets"
 	"duckdns-ui/pkg/db"
 	"duckdns-ui/pkg/tasks"
 	"encoding/json"
@@ -95,6 +96,7 @@ func AddDomainRoutes(mux *http.ServeMux) *http.ServeMux {
 			return
 		}
 		tasks.S.RemoveByTags(domain)
+		buckets.DeleteTask(conn, domain)
 		w.Write([]byte("ok"))
 	})
 
