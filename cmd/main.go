@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duckdns-ui/pkg/buckets"
+	"duckdns-ui/pkg/buckets/taskbucket"
 	"duckdns-ui/pkg/db"
 	"duckdns-ui/pkg/logger"
 	"duckdns-ui/pkg/routes"
@@ -30,7 +30,7 @@ func main() {
 
 	handler := logger.LogginngMiddleware(mux)
 
-	buckets.ResotreAllTasks(db.DB)
+	taskbucket.ResotreAllTasks(db.DB)
 
 	slog.Info("listening at 3000")
 	_ = http.ListenAndServe(":3000", handler)

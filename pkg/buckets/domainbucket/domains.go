@@ -1,4 +1,4 @@
-package db
+package domainbucket
 
 import (
 	"encoding/json"

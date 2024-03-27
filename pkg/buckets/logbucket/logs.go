@@ -1,4 +1,4 @@
-package logbuckets
+package logbucket
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package buckets
+package taskbucket
 
 import (
 	"duckdns-ui/pkg/duckdns"
