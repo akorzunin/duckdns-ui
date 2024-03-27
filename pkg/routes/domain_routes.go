@@ -23,8 +23,7 @@ func AddDomainRoutes(mux *http.ServeMux) *http.ServeMux {
 			w.Write([]byte("incorrect domain"))
 			return
 		}
-		conn := db.DB
-		if err := input.Save(conn); err != nil {
+		if err := input.Save(db.DB); err != nil {
 			w.WriteHeader(400)
 			w.Write([]byte("write to db failed"))
 			return
@@ -34,9 +33,8 @@ func AddDomainRoutes(mux *http.ServeMux) *http.ServeMux {
 
 	mux.HandleFunc("GET /api/domain/{domain}", func(w http.ResponseWriter, r *http.Request) {
 		domain := r.PathValue("domain")
-		conn := db.DB
 		var data []byte
-		err := conn.View(func(tx *bbolt.Tx) error {
+		err := db.DB.View(func(tx *bbolt.Tx) error {
 			b := tx.Bucket([]byte(db.DomainsBucket))
 			data = b.Get([]byte(domain))
 			return nil
@@ -54,9 +52,8 @@ func AddDomainRoutes(mux *http.ServeMux) *http.ServeMux {
 	})
 
 	mux.HandleFunc("GET /api/all-domains", func(w http.ResponseWriter, r *http.Request) {
-		conn := db.DB
 		var data []db.Domain
-		err := conn.View(func(tx *bbolt.Tx) error {
+		err := db.DB.View(func(tx *bbolt.Tx) error {
 			b := tx.Bucket([]byte(db.DomainsBucket))
 			b.ForEach(func(k, v []byte) error {
 				var domainData db.Domain

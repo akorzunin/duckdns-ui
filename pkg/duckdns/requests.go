@@ -2,6 +2,7 @@ package duckdns
 
 import (
 	"duckdns-ui/configs"
+	"duckdns-ui/pkg/logbuckets"
 	"duckdns-ui/pkg/db"
 	"errors"
 	"fmt"
@@ -12,7 +13,7 @@ import (
 	"time"
 )
 
-func UpdateDnsEntry(token string, domain string, ip string ) error {
+func UpdateDnsEntry(token string, domain string, ip string) error {
 	url := fmt.Sprintf(
 		"https://duckdns.org/update/?token=%s&ip=%s&domains=%s",
 		token,
@@ -70,8 +71,16 @@ func GetGlobalIP() (string, error) {
 }
 
 func UpdateDomain(domain string, interval time.Duration) {
+	l := &logbuckets.DbTaskLog{
+		Domain:    domain,
+		Interval:  interval.String(),
+		Message:   "",
+		Timestamp: time.Now(),
+	}
 	ip, err := GetGlobalIP()
 	if err != nil {
+		l.Message = "failed to get ip: " + err.Error()
+		l.Save(db.DB)
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
@@ -85,4 +94,8 @@ func UpdateDomain(domain string, interval time.Duration) {
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
+	l.Message = "task succeeded"
+	l.Save(db.DB)
+	slog.Info("task succeeded", "domain", domain, "ip", ip)
+
 }
