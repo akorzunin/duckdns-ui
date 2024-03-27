@@ -36,6 +36,11 @@ func (l *DbTaskLog) Save(db *bolt.DB) error {
 	return err
 }
 
+func (l *DbTaskLog) SaveWithMessage(db *bolt.DB, message string) error {
+	l.Message = message
+	return l.Save(db)
+}
+
 func GetTaskLogs(db *bolt.DB, domain string) ([]*DbTaskLog, error) {
 	var taskLogs []*DbTaskLog
 	err := db.View(func(tx *bolt.Tx) error {

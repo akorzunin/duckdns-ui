@@ -75,28 +75,30 @@ func UpdateDomain(domain string, interval time.Duration) {
 	l := &logbucket.DbTaskLog{
 		Domain:    domain,
 		Interval:  interval.String(),
+		IP:        "",
 		Message:   "",
 		Timestamp: time.Now(),
 	}
 	ip, err := GetGlobalIP()
 	if err != nil {
-		l.Message = "failed to get ip: " + err.Error()
-		l.Save(db.DB)
+		l.SaveWithMessage(db.DB, "failed to get ip: "+err.Error())
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
+	l.IP = ip
 	err = UpdateDnsEntry(configs.TOKEN, domain, ip)
 	if err != nil {
+		l.SaveWithMessage(db.DB, "failed to update domain: "+err.Error())
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
 	err = domainbucket.UpdateDomainEntry(db.DB, domain, ip)
 	if err != nil {
+		l.SaveWithMessage(db.DB, "failed to update domain entry: "+err.Error())
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
-	l.Message = "task succeeded"
-	l.Save(db.DB)
+	l.SaveWithMessage(db.DB, "task succeeded")
 	slog.Info("task succeeded", "domain", domain, "ip", ip)
 
 }
