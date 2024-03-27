@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func UpdateDnsEntry(token string, ip string, domain string) error {
+func UpdateDnsEntry(token string, domain string, ip string ) error {
 	url := fmt.Sprintf(
 		"https://duckdns.org/update/?token=%s&ip=%s&domains=%s",
 		token,
@@ -75,7 +75,7 @@ func UpdateDomain(domain string, interval time.Duration) {
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
 	}
-	err = UpdateDnsEntry(configs.TOKEN, ip, domain)
+	err = UpdateDnsEntry(configs.TOKEN, domain, ip)
 	if err != nil {
 		slog.Error(err.Error(), "domain", domain, "interval", interval)
 		return
