@@ -1,6 +1,7 @@
 package main
 
 import (
+	"duckdns-ui/configs"
 	"duckdns-ui/pkg/buckets/taskbucket"
 	"duckdns-ui/pkg/db"
 	"duckdns-ui/pkg/logger"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	configs.InitEnvVars()
 	logger.SetupLogger()
 	if err := db.InitializeDB("./data/data.db"); err != nil {
 		log.Fatal("failed to init db:", err)

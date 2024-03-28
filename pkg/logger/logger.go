@@ -20,6 +20,7 @@ func SetupLogger() *slog.Logger {
 	slog.SetDefault(logger)
 	return logger
 }
+
 func LogginngMiddleware(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("",

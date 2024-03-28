@@ -70,6 +70,10 @@ Run
 
     air
 
+### Run tests manually
+
+  go test ./... | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
+
 ### Build docker containers
 
 Create docker builder if its not exist

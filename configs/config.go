@@ -30,10 +30,15 @@ var DRY_RUN bool = func() bool {
 	return false
 }()
 
-var TOKEN string = func() string {
-	TOKEN := os.Getenv("TOKEN")
-	if TOKEN == "" && !DRY_RUN {
-		log.Fatal("Error loading TOKEN env variable")
-	}
-	return TOKEN
-}()
+var TOKEN string
+
+// Init vars that can't have default values
+func InitEnvVars() {
+	TOKEN = func() string {
+		TOKEN := os.Getenv("TOKEN")
+		if TOKEN == "" && !DRY_RUN {
+			log.Fatal("Error loading TOKEN env variable")
+		}
+		return TOKEN
+	}()
+}
