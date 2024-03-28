@@ -17,4 +17,5 @@ repos:
         additional_dependencies:
           - "prettier@^3.0.3"
           - "prettier-plugin-tailwindcss@^0.5.5"
+          - "tailwindcss-animate@^1.0.7"
         types_or: [javascript, ts, tsx]
