@@ -2,6 +2,7 @@ package db
 
 import (
 	"duckdns-ui/pkg/buckets/domainbucket"
+	"duckdns-ui/pkg/buckets/logbucket"
 
 	"go.etcd.io/bbolt"
 )
@@ -17,6 +18,7 @@ func InitializeDB(filepath string) error {
 	}
 	DB.Update(func(tx *bbolt.Tx) error {
 		tx.CreateBucketIfNotExists([]byte(domainbucket.DomainsBucket))
+		tx.CreateBucketIfNotExists([]byte(logbucket.LogsBucket))
 		return nil
 	})
 	return nil

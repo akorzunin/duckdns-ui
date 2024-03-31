@@ -2,6 +2,7 @@ package routes
 
 import (
 	"duckdns-ui/configs"
+	"duckdns-ui/pkg/buckets/logbucket"
 	"duckdns-ui/pkg/buckets/taskbucket"
 	"duckdns-ui/pkg/db"
 	"duckdns-ui/pkg/duckdns"
@@ -145,5 +146,35 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 			w.Write([]byte("ok"))
 		},
 	)
+
+	mux.HandleFunc(
+		"GET /api/task/logs/{domain}",
+		func(w http.ResponseWriter, r *http.Request) {
+			domain := r.PathValue("domain")
+			logs, err := logbucket.GetTaskLogs(db.DB, domain)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			jsonData, err := json.Marshal(logs)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(jsonData)
+		},
+	)
+
+	mux.HandleFunc(
+		"DELETE /api/task/logs/{domain}",
+		func(w http.ResponseWriter, r *http.Request) {
+			domain := r.PathValue("domain")
+			logbucket.DeleteTaskLogs(db.DB, domain)
+			w.WriteHeader(200)
+			w.Write([]byte("ok"))
+		},
+	)
+
 	return mux
 }

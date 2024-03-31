@@ -43,19 +43,19 @@ func (l *DbTaskLog) SaveWithMessage(db *bolt.DB, message string) error {
 
 func GetTaskLogs(db *bolt.DB, domain string) ([]*DbTaskLog, error) {
 	var taskLogs []*DbTaskLog
-	err := db.View(func(tx *bolt.Tx) error {
+	err := db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists([]byte(LogsBucket))
 		if err != nil {
 			return err
 		}
 		domainLogs, err := b.CreateBucketIfNotExists([]byte(domain))
 		domainLogs.ForEach(func(k, v []byte) error {
-			var logData *DbTaskLog
-			err = json.Unmarshal(v, logData)
+			var logData DbTaskLog
+			err = json.Unmarshal(v, &logData)
 			if err != nil {
 				return err
 			}
-			taskLogs = append(taskLogs, logData)
+			taskLogs = append(taskLogs, &logData)
 			return err
 		})
 		return nil
@@ -64,4 +64,20 @@ func GetTaskLogs(db *bolt.DB, domain string) ([]*DbTaskLog, error) {
 		return nil, err
 	}
 	return taskLogs, nil
+}
+
+func DeleteTaskLogs(db *bolt.DB, domain string) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		b, err := tx.CreateBucketIfNotExists([]byte(LogsBucket))
+		if err != nil {
+			return err
+		}
+		domainLogs, err := b.CreateBucketIfNotExists([]byte(domain))
+		if err != nil {
+			return err
+		}
+		return domainLogs.ForEach(func(k, v []byte) error {
+			return domainLogs.Delete(k)
+		})
+	})
 }

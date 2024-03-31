@@ -1,0 +1,17 @@
+meta {
+  name: delete task logs
+  type: http
+  seq: 15
+}
+
+delete {
+  url: {{LOCAL}}/api/task/logs/test.domain
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "interval": "10s"
+  }
+}
