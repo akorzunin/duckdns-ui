@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { DbTaskLog } from './models/DbTaskLog';
 export type { Domain } from './models/Domain';
 export type { Task } from './models/Task';
 

@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { DbTaskLog } from '../models/DbTaskLog';
 import type { Domain } from '../models/Domain';
 import type { Task } from '../models/Task';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -191,6 +192,43 @@ export class DefaultService {
             url: '/api/all-tasks',
             errors: {
                 500: `Internal Server Error`,
+            },
+        });
+    }
+    /**
+     * Get task logs by domain
+     * @param domain
+     * @returns DbTaskLog Successful operation
+     * @throws ApiError
+     */
+    public static getApiTaskLogs(
+        domain: string,
+    ): CancelablePromise<Array<DbTaskLog>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/task/logs/{domain}',
+            path: {
+                'domain': domain,
+            },
+            errors: {
+                500: `Internal Server Error`,
+            },
+        });
+    }
+    /**
+     * Delete task logs by domain
+     * @param domain
+     * @returns string Successful operation
+     * @throws ApiError
+     */
+    public static deleteApiTaskLogs(
+        domain: string,
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/task/logs/{domain}',
+            path: {
+                'domain': domain,
             },
         });
     }
