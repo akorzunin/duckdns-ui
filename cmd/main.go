@@ -31,6 +31,7 @@ func main() {
 	mux = routes.AddApiRoutes(mux)
 
 	handler := logger.LogginngMiddleware(mux)
+	handler = routes.CorsMiddleware(handler)
 
 	taskbucket.ResotreAllTasks(db.DB)
 
