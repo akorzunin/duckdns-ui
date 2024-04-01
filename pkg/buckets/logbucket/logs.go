@@ -14,7 +14,7 @@ type DbTaskLog struct {
 	Interval  string    `json:"interval"`
 	IP        string    `json:"ip"`
 	Message   string    `json:"message"`
-	Timestamp time.Time `json:"timstamp"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 func (l *DbTaskLog) Save(db *bolt.DB) error {
