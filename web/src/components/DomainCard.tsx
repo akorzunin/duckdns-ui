@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import TaskCard from "./TaskCard";
 import UpdateIpButton from "./buttons/UpdateIpButton";
 import { atom, useSetAtom } from "jotai";
-import { Separator } from "../shadcn/ui/separator";
 import LogViewButton from "./LogViewCard";
 
 export interface IrefetchDomainTask {
@@ -57,7 +56,6 @@ const DomainCard: FC<IDomainCard> = ({ domain }) => {
               refetch={refetchDomainTask}
             />
           )}
-          <Separator orientation="vertical" />
           <LogViewButton domain={domain} />
           <EditDomainButton domain={domain} />
           <UpdateIpButton domain={domain} />

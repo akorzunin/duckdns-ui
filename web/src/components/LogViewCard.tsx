@@ -6,6 +6,8 @@ import { DefaultService, Domain } from "../api/client";
 import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollArea } from "../shadcn/ui/scroll-area";
+import LogViewPanel from "./LogViewPanel";
+import LogRow from "./LogRow";
 
 interface ILogViewButton {
   domain: Domain;
@@ -33,20 +35,17 @@ const LogViewButton: FC<ILogViewButton> = ({ domain }) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto">
         <div className="grid gap-4">
-          <h4 className="font-medium leading-none">
-            Task logs for <b>{domain.name}</b>
-          </h4>
-          <ScrollArea className="h-[40vh] rounded-md border">
-            {taskLogsData && (
-              <div className="flex flex-col-reverse gap-4 p-4">
+          <LogViewPanel domain={domain} refetch={refetch} />
+          <ScrollArea className="h-[40vh] min-w-[20vw] max-w-[50vw]  rounded-md border ">
+            {taskLogsData ? (
+              <div className="flex flex-col-reverse gap-1 p-4">
                 {taskLogsData.map((taskLog) => (
-                  <div key={taskLog.timestamp} className="flex gap-2">
-                    {taskLog.domain}
-                    <div>{taskLog.ip}</div>
-                    <div>{taskLog.interval}</div>
-                    <div>{taskLog.timestamp}</div>
-                  </div>
+                  <LogRow key={taskLog.timestamp} taskLog={taskLog} />
                 ))}
+              </div>
+            ) : (
+              <div className="flex justify-center pt-4">
+                <p>No data</p>
               </div>
             )}
           </ScrollArea>
