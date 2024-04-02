@@ -15,7 +15,7 @@ import TaskCard from "./TaskCard";
 import UpdateIpButton from "./buttons/UpdateIpButton";
 import { atom, useSetAtom } from "jotai";
 import { Separator } from "../shadcn/ui/separator";
-import LogViewButton from "./buttons/LogViewButton";
+import LogViewButton from "./LogViewCard";
 
 export interface IrefetchDomainTask {
   fn: () => void;
