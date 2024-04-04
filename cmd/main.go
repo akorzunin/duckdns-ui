@@ -7,6 +7,7 @@ import (
 	"duckdns-ui/pkg/logger"
 	"duckdns-ui/pkg/routes"
 	"duckdns-ui/pkg/tasks"
+	"expvar"
 	"log"
 	"log/slog"
 	"net/http"
@@ -29,6 +30,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux = routes.AddFrontRoutes(mux)
 	mux = routes.AddApiRoutes(mux)
+	mux.Handle("/debug/vars", expvar.Handler())
 
 	handler := logger.LogginngMiddleware(mux)
 	handler = routes.CorsMiddleware(handler)
