@@ -38,5 +38,8 @@ func main() {
 	taskbucket.ResotreAllTasks(db.DB)
 
 	slog.Info("listening at 3000")
-	_ = http.ListenAndServe(":3000", handler)
+	err := http.ListenAndServe(":3000", handler)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

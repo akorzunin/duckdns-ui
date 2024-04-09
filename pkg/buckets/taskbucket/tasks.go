@@ -66,6 +66,9 @@ func ResotreAllTasks(db *bolt.DB) error {
 	restoredTasks := 0
 	err := db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte(TasksBucket))
+		if b == nil {
+			return nil
+		}
 		b.ForEach(func(k, v []byte) error {
 			var taskData DbTask
 			if err := json.Unmarshal([]byte(v), &taskData); err != nil {
