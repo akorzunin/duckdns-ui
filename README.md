@@ -10,8 +10,8 @@ You can:
 
 - Update ip manually
 - Update ip w/ a periodic task
-- View logs of tasks (WIP)
-- Restore/migrate periodic tasks (WIP)
+- View logs of tasks
+- Restore/migrate periodic tasks
 
 ## Deploy
 
