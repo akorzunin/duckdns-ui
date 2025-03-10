@@ -53,6 +53,7 @@ func GetGlobalIP() (string, error) {
 		return dummyIp, nil
 	}
 	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Set("User-Agent", "curl")
 	if err != nil {
 		return "", err
 	}
