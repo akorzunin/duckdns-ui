@@ -27,17 +27,20 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
     CGO_ENABLED=0 GOARCH=$TARGETARCH go build -o /bin/server ./cmd
 
 
-FROM --platform=$BUILDPLATFORM node:21.7.1-alpine AS frontend
-WORKDIR /usr/src/app
-
-RUN --mount=type=bind,source=./web/package.json,target=package.json \
-    --mount=type=bind,source=./web/package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci
+FROM --platform=$BUILDPLATFORM node:22-alpine AS frontend
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+RUN corepack prepare pnpm@10.0.0 --activate
+WORKDIR /app
+COPY ./web/package.json ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    --mount=type=bind,source=./web/pnpm-lock.yaml,target=pnpm-lock.yaml \
+    pnpm install --frozen-lockfile
 
 COPY ./web .
 
-RUN npm run build
+RUN pnpm build
 
 
 FROM alpine:latest AS final
@@ -46,7 +49,7 @@ WORKDIR /src
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /src/
 
-COPY --from=frontend /usr/src/app/dist ./web/dist
+COPY --from=frontend /app/dist ./web/dist
 
 # Expose the port that the application listens on.
 EXPOSE 3000

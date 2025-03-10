@@ -50,35 +50,5 @@
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.2.2",
 		"vite": "^5.1.4"
-	},
-	"Transform": "AWS::Serverless-2016-10-31",
-	"Resources": {
-		"Api": {
-			"Type": "AWS::Serverless::Api",
-			"Properties": {
-				"Name": {
-					"Fn::Sub": [
-						"${ResourceName} From Stack ${AWS::StackName}",
-						{
-							"ResourceName": "Api"
-						}
-					]
-				},
-				"StageName": "Prod",
-				"DefinitionBody": {
-					"openapi": "3.0",
-					"info": {},
-					"paths": {
-						"/": {
-							"get": {
-								"responses": {}
-							}
-						}
-					}
-				},
-				"EndpointConfiguration": "REGIONAL",
-				"TracingEnabled": true
-			}
-		}
 	}
 }
