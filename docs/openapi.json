@@ -253,6 +253,28 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 10,
+              "description": "Number of items to return"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of items to skip before starting to collect the result set"
+            }
           }
         ],
         "responses": {
@@ -313,7 +335,9 @@
             "type": "string"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "Task": {
         "type": "object",
@@ -325,7 +349,10 @@
             "type": "string"
           }
         },
-        "required": ["domain", "interval"]
+        "required": [
+          "domain",
+          "interval"
+        ]
       },
       "DbTaskLog": {
         "type": "object",
