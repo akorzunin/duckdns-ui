@@ -16,7 +16,7 @@ interface ILogViewPanel {
 const LogViewPanel: FC<ILogViewPanel> = ({ domain, refetch }) => {
   return (
     <div className="flex items-center justify-between">
-      <h4 className="font-medium leading-none ">
+      <h4 className="font-medium leading-none">
         Task logs for <b>{domain.name}</b>
       </h4>
       <div className="flex gap-2">

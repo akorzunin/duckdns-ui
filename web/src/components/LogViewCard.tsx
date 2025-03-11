@@ -36,7 +36,7 @@ const LogViewButton: FC<ILogViewButton> = ({ domain }) => {
       <PopoverContent className="w-auto">
         <div className="grid gap-4">
           <LogViewPanel domain={domain} refetch={refetch} />
-          <ScrollArea className="h-[40vh] min-w-[20vw] max-w-[50vw]  rounded-md border ">
+          <ScrollArea className="h-[40vh] min-w-[20vw] max-w-[50vw] rounded-md border">
             {taskLogsData ? (
               <div className="flex flex-col-reverse gap-1 p-4">
                 {taskLogsData.map((taskLog) => (
