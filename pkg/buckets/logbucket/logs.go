@@ -2,6 +2,8 @@ package logbucket
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"time"
 
 	bolt "go.etcd.io/bbolt"
@@ -41,29 +43,54 @@ func (l *DbTaskLog) SaveWithMessage(db *bolt.DB, message string) error {
 	return l.Save(db)
 }
 
-func GetTaskLogs(db *bolt.DB, domain string) ([]*DbTaskLog, error) {
+func GetTaskLogs(
+	db *bolt.DB,
+	domain string,
+	limit int,
+	offset int,
+) ([]*DbTaskLog, error) {
 	var taskLogs []*DbTaskLog
-	err := db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(LogsBucket))
-		if err != nil {
-			return err
+
+	err := db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(LogsBucket))
+		if b == nil {
+			return errors.New("logs bucket not found")
 		}
-		domainLogs, err := b.CreateBucketIfNotExists([]byte(domain))
-		domainLogs.ForEach(func(k, v []byte) error {
+		domainLogs := b.Bucket([]byte(domain))
+		if domainLogs == nil {
+			return errors.New("domain logs not found")
+		}
+		s := domainLogs.Stats()
+		if s.KeyN == 0 {
+			return nil
+		}
+		if s.KeyN < limit+offset {
+			return fmt.Errorf(
+				"not enough rows %d for limit %d and offset %d",
+				s.KeyN,
+				limit,
+				offset,
+			)
+		}
+		c := domainLogs.Cursor()
+		count := 0
+		for _, v := c.Last(); count < (limit + offset); _, v = c.Prev() {
+			if count < offset {
+				count++
+				continue
+			}
 			var logData DbTaskLog
-			err = json.Unmarshal(v, &logData)
+			err := json.Unmarshal(v, &logData)
 			if err != nil {
 				return err
 			}
 			taskLogs = append(taskLogs, &logData)
-			return err
-		})
+			count++
+		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return taskLogs, nil
+
+	return taskLogs, err
 }
 
 func DeleteTaskLogs(db *bolt.DB, domain string) error {

@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"strconv"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
@@ -150,8 +151,32 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 	mux.HandleFunc(
 		"GET /api/task/logs/{domain}",
 		func(w http.ResponseWriter, r *http.Request) {
+			q := r.URL.Query()
+			offset, ok := q["offset"]
+			if !ok || len(offset) < 1 {
+				offset = []string{"0"}
+			}
+			limit, ok := q["limit"]
+			if !ok || len(limit) < 1 {
+				limit = []string{"10"}
+			}
 			domain := r.PathValue("domain")
-			logs, err := logbucket.GetTaskLogs(db.DB, domain)
+			intOffset, err := strconv.Atoi(offset[0])
+			if err != nil {
+				http.Error(w, "offset must be a number", http.StatusBadRequest)
+				return
+			}
+			intLimit, err := strconv.Atoi(limit[0])
+			if err != nil {
+				http.Error(w, "limit must be a number", http.StatusBadRequest)
+				return
+			}
+			logs, err := logbucket.GetTaskLogs(
+				db.DB,
+				domain,
+				intLimit,
+				intOffset,
+			)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

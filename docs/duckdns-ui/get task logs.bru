@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{LOCAL}}/api/task/logs/test.domain
+  url: {{LOCAL}}/api/task/logs/test.domain?limit=100&offset=0
   body: none
   auth: none
+}
+
+params:query {
+  limit: 100
+  offset: 0
 }
 
 body:json {
