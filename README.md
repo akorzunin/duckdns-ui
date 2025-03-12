@@ -26,7 +26,7 @@ TOKEN={URDUCKDNSTOKEN}
 ```yaml
 services:
   duckdns-ui:
-    image: akorzunin/duckdns-ui:latest
+    image: ghcr.io/akorzunin/duckdns-ui:latest
     ports:
       - 3000:3000
     env_file:
@@ -72,14 +72,4 @@ Run
 
 ### Run tests manually
 
-  go test ./... | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
-
-### Build docker containers
-
-Create docker builder if its not exist
-
-    docker buildx create --name mybuilder --bootstrap --use
-
-Run build and update latest images
-
-    docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t akorzunin/duckdns-ui:latest --push .
+go test ./... | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
