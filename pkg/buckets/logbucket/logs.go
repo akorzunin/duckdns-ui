@@ -3,7 +3,6 @@ package logbucket
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	bolt "go.etcd.io/bbolt"
@@ -64,18 +63,10 @@ func GetTaskLogs(
 		if s.KeyN == 0 {
 			return nil
 		}
-		if s.KeyN < limit+offset {
-			return fmt.Errorf(
-				"not enough rows %d for limit %d and offset %d",
-				s.KeyN,
-				limit,
-				offset,
-			)
-		}
 		c := domainLogs.Cursor()
 		count := 0
 		for _, v := c.Last(); count < (limit + offset); _, v = c.Prev() {
-			if count < offset {
+			if count < offset || v == nil {
 				count++
 				continue
 			}

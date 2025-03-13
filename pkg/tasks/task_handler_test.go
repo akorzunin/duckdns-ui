@@ -1,13 +1,16 @@
-package tasks
+package tasks_test
 
-import "testing"
+import (
+	"duckdns-ui/pkg/tasks"
+	"testing"
+)
 
 func TestInitScheduler(t *testing.T) {
-	err := InitScheduler()
+	err := tasks.InitScheduler()
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Fatalf("failed to init task scheduler: %v", err)
 	}
-	if S == nil {
-		t.Errorf("failed to init task scheduler")
+	if tasks.S == nil {
+		t.Fatalf("scheduler is nil")
 	}
 }
