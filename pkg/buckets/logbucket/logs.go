@@ -47,8 +47,9 @@ func GetTaskLogs(
 	domain string,
 	limit int,
 	offset int,
-) ([]*DbTaskLog, error) {
+) ([]*DbTaskLog, int, error) {
 	var taskLogs []*DbTaskLog
+	var total int
 
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(LogsBucket))
@@ -60,6 +61,7 @@ func GetTaskLogs(
 			return errors.New("domain logs not found")
 		}
 		s := domainLogs.Stats()
+		total = s.KeyN
 		if s.KeyN == 0 {
 			return nil
 		}
@@ -81,7 +83,7 @@ func GetTaskLogs(
 		return nil
 	})
 
-	return taskLogs, err
+	return taskLogs, total, err
 }
 
 func DeleteTaskLogs(db *bolt.DB, domain string) error {

@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DbTaskLog } from '../models/DbTaskLog';
 import type { Domain } from '../models/Domain';
 import type { Task } from '../models/Task';
+import type { TaskLogsResponse } from '../models/TaskLogsResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -200,14 +200,14 @@ export class DefaultService {
      * @param domain
      * @param limit
      * @param offset
-     * @returns DbTaskLog Successful operation
+     * @returns TaskLogsResponse Successful operation
      * @throws ApiError
      */
     public static getApiTaskLogs(
         domain: string,
         limit: number = 10,
         offset?: number,
-    ): CancelablePromise<Array<DbTaskLog>> {
+    ): CancelablePromise<TaskLogsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/task/logs/{domain}',

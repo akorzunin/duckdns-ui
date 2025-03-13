@@ -148,6 +148,10 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 		},
 	)
 
+	type TaskLogsResponse struct {
+		Logs  []*logbucket.DbTaskLog `json:"logs"`
+		Total int                    `json:"total"`
+	}
 	mux.HandleFunc(
 		"GET /api/task/logs/{domain}",
 		func(w http.ResponseWriter, r *http.Request) {
@@ -171,7 +175,7 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 				http.Error(w, "limit must be a number", http.StatusBadRequest)
 				return
 			}
-			logs, err := logbucket.GetTaskLogs(
+			logs, total, err := logbucket.GetTaskLogs(
 				db.DB,
 				domain,
 				intLimit,
@@ -181,7 +185,10 @@ func AddTaskRoutes(mux *http.ServeMux) *http.ServeMux {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			jsonData, err := json.Marshal(logs)
+			jsonData, err := json.Marshal(TaskLogsResponse{
+				Logs:  logs,
+				Total: total,
+			})
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

@@ -283,10 +283,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DbTaskLog"
-                  }
+                  "$ref": "#/components/schemas/TaskLogsResponse"
                 }
               }
             }
@@ -372,6 +369,20 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "TaskLogsResponse": {
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DbTaskLog"
+            }
+          },
+          "total": {
+            "type": "integer"
           }
         }
       }

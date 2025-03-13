@@ -30,7 +30,7 @@ func SetupTest(t *testing.T) {
 
 func TestGetTaskLogs(t *testing.T) {
 	SetupTest(t)
-	logs, err := logbucket.GetTaskLogs(db.DB, "test.domain", 10, 0)
+	logs, _, err := logbucket.GetTaskLogs(db.DB, "test.domain", 10, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -41,7 +41,7 @@ func TestGetTaskLogs(t *testing.T) {
 
 func TestGetTaskLogsWithOffset(t *testing.T) {
 	SetupTest(t)
-	logs, err := logbucket.GetTaskLogs(db.DB, "test.domain", 10, 5)
+	logs, _, err := logbucket.GetTaskLogs(db.DB, "test.domain", 10, 5)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestGetTaskLogsWithOffset(t *testing.T) {
 
 func TestGetTaskLogsOverLimit(t *testing.T) {
 	SetupTest(t)
-	logs, err := logbucket.GetTaskLogs(db.DB, "test.domain", 100, 0)
+	logs, _, err := logbucket.GetTaskLogs(db.DB, "test.domain", 100, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func TestGetTaskLogsOverLimit(t *testing.T) {
 
 func TestGetTaskLogsOffsetOverLimit(t *testing.T) {
 	SetupTest(t)
-	logs, err := logbucket.GetTaskLogs(db.DB, "test.domain", 100, 5)
+	logs, _, err := logbucket.GetTaskLogs(db.DB, "test.domain", 100, 5)
 	if err != nil {
 		t.Fatal(err)
 	}
