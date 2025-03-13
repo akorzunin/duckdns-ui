@@ -57,14 +57,14 @@ Run
 
 ### Generate client from openapi specs
 
-    npx openapi-typescript-codegen --input ./docs/openapi.json --output ./web/src/api/client --client fetch
+    pnpm dlx openapi-typescript-codegen@v0.29.0 --input ./docs/openapi.json --output ./web/src/api/client --client fetch
 
 ### Run vite dev sever
 
     cd web
-    npm i
+    pnpm i
     echo "VITE_API_URL=http://localhost:3000" > .env
-    npm run dev
+    pnpm dev
 
 ### Run api w/ hot reload
 

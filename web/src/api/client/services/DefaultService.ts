@@ -198,17 +198,25 @@ export class DefaultService {
     /**
      * Get task logs by domain
      * @param domain
+     * @param limit
+     * @param offset
      * @returns DbTaskLog Successful operation
      * @throws ApiError
      */
     public static getApiTaskLogs(
         domain: string,
+        limit: number = 10,
+        offset?: number,
     ): CancelablePromise<Array<DbTaskLog>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/task/logs/{domain}',
             path: {
                 'domain': domain,
+            },
+            query: {
+                'limit': limit,
+                'offset': offset,
             },
             errors: {
                 500: `Internal Server Error`,
