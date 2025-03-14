@@ -1,0 +1,50 @@
+version: "3"
+
+tasks:
+  run-backend:
+    desc: Run backend
+    aliases:
+      - rb
+    cmds:
+      - go run ./cmd/main.go
+    env:
+      DRY_RUN: 1
+      LOG_JSON: 0
+
+  debug-frontend:
+    desc: Debug frontend
+    aliases:
+      - df
+    dir: web
+    interactive: true
+    preconditions:
+      - pnpm install
+    cmds:
+      - pnpm dev
+    env:
+      VITE_API_URL: http://localhost:3000
+
+  debug-web:
+    desc: Run backend and frontend dev server
+    aliases:
+      - dw
+    deps:
+      - debug-frontend
+      - run-backend
+
+  test:
+    desc: Run tests
+    aliases:
+      - t
+    interactive: false
+    cmds:
+      - cmd: go test ./...
+        platforms:
+          - windows
+      - cmd: >-
+          go test ./...
+          | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/''
+          | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
+        platforms:
+          - darwin
+          - linux

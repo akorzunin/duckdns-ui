@@ -59,12 +59,9 @@ Run
 
     pnpm dlx openapi-typescript-codegen@v0.29.0 --input ./docs/openapi.json --output ./web/src/api/client --client fetch
 
-### Run vite dev sever
+### Run vite dev sever w/ backend
 
-    cd web
-    pnpm i
-    echo "VITE_API_URL=http://localhost:3000" > .env
-    pnpm dev
+    task debug-web
 
 ### Run api w/ hot reload
 
@@ -72,4 +69,4 @@ Run
 
 ### Run tests manually
 
-go test ./... | sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
+    task test

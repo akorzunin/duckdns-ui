@@ -7,4 +7,3 @@ export type TaskLogsResponse = {
     logs?: Array<DbTaskLog>;
     total?: number;
 };
-
