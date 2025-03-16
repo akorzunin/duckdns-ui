@@ -71,3 +71,31 @@ func TestGetTaskLogsOffsetOverLimit(t *testing.T) {
 	assert.Equal(t, logs[0].IP, "127.0.0.15", "wrong ip")
 	assert.Equal(t, logs[len(logs)-1].IP, "127.0.0.1", "wrong ip")
 }
+
+func TestMaskTokens(t *testing.T) {
+	text := "some text with token 12345678-1234-1234-1234-123456789012 and some more text"
+	masked := logbucket.MaskTokens(text)
+	assert.Equal(
+		t,
+		masked,
+		"some text with token 12345678-****-****-****-************ and some more text",
+	)
+}
+
+func TestMaskTokensWithEmptyText(t *testing.T) {
+	text := ""
+	masked := logbucket.MaskTokens(text)
+	assert.Equal(t, masked, "")
+}
+
+func TestMaskTokensMultiple(t *testing.T) {
+	text := `
+some text with token 12345678-1234-1234-1234-123456789012
+and some more text with token 12345678-1234-1234-1234-123456789012
+and some more text`
+	masked := logbucket.MaskTokens(text)
+	assert.Equal(t, masked, `
+some text with token 12345678-****-****-****-************
+and some more text with token 12345678-****-****-****-************
+and some more text`)
+}

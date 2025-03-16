@@ -3,6 +3,9 @@ package logbucket
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	bolt "go.etcd.io/bbolt"
@@ -37,8 +40,19 @@ func (l *DbTaskLog) Save(db *bolt.DB) error {
 	return err
 }
 
+func MaskTokens(text string) string {
+	pattern := regexp.MustCompile(
+		`[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}`,
+	)
+
+	return pattern.ReplaceAllStringFunc(text, func(uuid string) string {
+		parts := strings.Split(uuid, "-")
+		return fmt.Sprintf("%s-****-****-****-************", parts[0])
+	})
+}
+
 func (l *DbTaskLog) SaveWithMessage(db *bolt.DB, message string) error {
-	l.Message = message
+	l.Message = MaskTokens(message)
 	return l.Save(db)
 }
 
